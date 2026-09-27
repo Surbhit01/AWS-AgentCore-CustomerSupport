@@ -1,0 +1,6 @@
+langgraph>=0.2.0
+langchain-aws>=0.2.0
+langchain-core>=0.3.0
+bedrock-agentcore
+fastapi>=0.110.0
+uvicorn>=0.29.0
