@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+orders.db
+tests/
+local_api.py
+README.md
+.gitignore
