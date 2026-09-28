@@ -132,6 +132,36 @@ curl -X POST http://127.0.0.1:8000/chat \
 Reusing `thread_id` across calls continues the same conversation (e.g. to
 answer a follow-up after the agent asks for an order ID).
 
+## AWS terminology used below
+
+Terms specific to this project's deployment, for reference before the steps
+that use them:
+
+- **Bedrock** — AWS's managed service for calling foundation models (Claude,
+  Nova, etc.) via a single API, instead of hosting/serving models yourself.
+- **Model access** — a per-account, per-region opt-in step in the Bedrock
+  console; a model must be explicitly enabled before it can be invoked.
+- **Application inference profile** — a Bedrock resource that wraps a
+  foundation model behind its own ARN. Some models can only be invoked
+  through a profile rather than by their bare model ID directly (an
+  account/region capacity detail, not a code choice).
+- **AgentCore Runtime** — the managed service this project deploys to: it
+  runs the packaged agent container, handling session isolation and scaling
+  so the agent code doesn't have to.
+- **Agent Runtime** vs. **Runtime Endpoint** — the Runtime is the deployed
+  resource (tied to a container image); an Endpoint (e.g. `DEFAULT`) is a
+  named, invokable pointer to one *version* of that Runtime — similar in
+  spirit to a Lambda alias pointing at a specific Lambda version.
+- **Execution role** — the IAM role the deployed agent *runs as* inside
+  AgentCore Runtime. Distinct from whatever IAM user/role a developer uses
+  locally to build/push the image or invoke the runtime — permissions
+  granted to one do not apply to the other.
+- **ECR (Elastic Container Registry)** — AWS's Docker image registry; the
+  built agent image is pushed here before AgentCore Runtime can use it.
+- **ARN (Amazon Resource Name)** — the unique identifier for any AWS
+  resource (a role, a model, an inference profile, a runtime, ...), always
+  in the form `arn:aws:<service>:<region>:<account-id>:<resource>`.
+
 ## Deployment
 
 1. **Enable a Bedrock model.** If it isn't invokable by
